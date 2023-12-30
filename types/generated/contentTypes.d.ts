@@ -677,107 +677,116 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
-export interface ApiAuthorAuthor extends Schema.CollectionType {
-  collectionName: 'authors';
+export interface ApiAnimeAnime extends Schema.CollectionType {
+  collectionName: 'animes';
   info: {
-    singularName: 'author';
-    pluralName: 'authors';
-    displayName: 'author';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String & Attribute.Required;
-    posts: Attribute.Relation<
-      'api::author.author',
-      'oneToMany',
-      'api::post.post'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::author.author',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::author.author',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiCategorieCategorie extends Schema.CollectionType {
-  collectionName: 'categories';
-  info: {
-    singularName: 'categorie';
-    pluralName: 'categories';
-    displayName: 'categorie';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String & Attribute.Required;
-    posts: Attribute.Relation<
-      'api::categorie.categorie',
-      'oneToMany',
-      'api::post.post'
-    >;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::categorie.categorie',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::categorie.categorie',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiPostPost extends Schema.CollectionType {
-  collectionName: 'posts';
-  info: {
-    singularName: 'post';
-    pluralName: 'posts';
-    displayName: 'post';
+    singularName: 'anime';
+    pluralName: 'animes';
+    displayName: 'anime';
+    description: '';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
     title: Attribute.String & Attribute.Required;
-    cover: Attribute.Media & Attribute.Required;
-    content: Attribute.RichText & Attribute.Required;
-    slug: Attribute.UID<'api::post.post', 'title'> & Attribute.Required;
-    author: Attribute.Relation<
-      'api::post.post',
-      'manyToOne',
-      'api::author.author'
+    slug: Attribute.UID<'api::anime.anime', 'title'>;
+    seasons: Attribute.Relation<
+      'api::anime.anime',
+      'oneToMany',
+      'api::season.season'
     >;
-    categorie: Attribute.Relation<
-      'api::post.post',
-      'manyToOne',
-      'api::categorie.categorie'
+    cover: Attribute.Media;
+    description: Attribute.Text &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 20;
+      }>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::anime.anime',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::anime.anime',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiEpisodeEpisode extends Schema.CollectionType {
+  collectionName: 'episodes';
+  info: {
+    singularName: 'episode';
+    pluralName: 'episodes';
+    displayName: 'episode';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required;
+    url: Attribute.Text & Attribute.Required;
+    episode_number: Attribute.Float;
+    slug: Attribute.UID<'api::episode.episode', 'title'> & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::episode.episode',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::episode.episode',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiSeasonSeason extends Schema.CollectionType {
+  collectionName: 'seasons';
+  info: {
+    singularName: 'season';
+    pluralName: 'seasons';
+    displayName: 'season';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    title: Attribute.String & Attribute.Required;
+    slug: Attribute.UID<'api::season.season', 'title'> & Attribute.Required;
+    episodes: Attribute.Relation<
+      'api::season.season',
+      'oneToMany',
+      'api::episode.episode'
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::post.post', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'api::season.season',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'api::post.post', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'api::season.season',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -798,9 +807,9 @@ declare module '@strapi/types' {
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
-      'api::author.author': ApiAuthorAuthor;
-      'api::categorie.categorie': ApiCategorieCategorie;
-      'api::post.post': ApiPostPost;
+      'api::anime.anime': ApiAnimeAnime;
+      'api::episode.episode': ApiEpisodeEpisode;
+      'api::season.season': ApiSeasonSeason;
     }
   }
 }
